@@ -8,8 +8,7 @@ import production.StringFormatException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AddNumbersTest {
 
@@ -53,4 +52,10 @@ public class AddNumbersTest {
         assertThat(StringCalculator.add("//;\n1;2"), is(3));
     }
 
+    @Test
+    void negativesNotAllowed() {
+
+        Throwable thrown = assertThrows(StringFormatException.class, () -> {StringCalculator.add("1,-3,2,-5,5");});
+        assertEquals(thrown.getMessage().equals("Negatives not allowed: -3 -5"), true);
+    }
 }
