@@ -3,6 +3,7 @@ package production;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.IntPredicate;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
@@ -32,8 +33,15 @@ public class StringCalculator  {
 
             String separator = inputString.substring(delimiterEscapeStart.length(),delimiterEndIndex(inputString));
 
-            if(separator.startsWith("[") && separator.endsWith("]"))
-                separator = separator.substring(1,separator.length() - 1);
+            if(separator.startsWith("[") && separator.endsWith("]")) {
+
+                Matcher separatorMatcher = Pattern.compile("\\[([^\\]]+)\\]").matcher(separator);
+                StringBuilder separatorBuilder = new StringBuilder();
+                while (separatorMatcher.find())
+                    separatorBuilder.append(separatorMatcher.group(1) + "|");
+
+                separator = separatorBuilder.toString().substring(0, separatorBuilder.length() - 1);
+            }
 
             return separator;
         }
