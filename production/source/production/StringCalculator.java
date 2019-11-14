@@ -2,6 +2,7 @@ package production;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.IntPredicate;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
@@ -11,8 +12,13 @@ public class StringCalculator  {
 
             String separator = "[,\\n]";
             if (inputString.startsWith("//")) {
+
                 int firstNewLine = inputString.indexOf('\n');
+
                 separator = inputString.substring(2,firstNewLine);
+                if(separator.startsWith("[") && separator.endsWith("]"))
+                    separator = separator.substring(1,separator.length() - 1);
+
                 inputString = inputString.substring(firstNewLine + 1);
             }
 
@@ -31,13 +37,17 @@ public class StringCalculator  {
         return exceptionText.toString().trim();
     }
 
+    private static IntPredicate loPassFilterPredicate(int threshold){
+        return x -> x <= threshold;
+    }
+
     public static int add(String numbers) throws StringFormatException {
 
         if (numbers.isEmpty())
             return 0;
         else {
 
-            IntStream numStream = parseInputString(numbers);
+            IntStream numStream = parseInputString(numbers).filter(loPassFilterPredicate(1000));
 
             List<Integer> negatives = new LinkedList<Integer>();
 

@@ -58,4 +58,16 @@ public class AddNumbersTest {
         Throwable thrown = assertThrows(StringFormatException.class, () -> {StringCalculator.add("1,-3,2,-5,5");});
         assertEquals(thrown.getMessage().equals("Negatives not allowed: -3 -5"), true);
     }
+
+    @Test
+    void overOneThousand() {
+
+        assertThat(StringCalculator.add("1001,2"), is(2));
+    }
+
+    @Test
+    void anyLengthDelimiter() {
+
+        assertThat(StringCalculator.add("//[:::]\n1:::2:::3"), is(6));
+    }
 }
