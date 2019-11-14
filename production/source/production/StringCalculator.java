@@ -8,19 +8,49 @@ import java.util.stream.IntStream;
 
 public class StringCalculator  {
 
+    public static final String defaultDelimiter = "[,\\n]";
+
+    public static final String delimiterEscapeStart = "//";
+    public static final String delimiterEscapeEnd = "\n";
+
+    private static boolean hasDelimiterLine(String inputString) {
+
+        return inputString.startsWith(delimiterEscapeStart);
+    }
+
+    private static int delimiterEndIndex(String inputString){
+
+        if (hasDelimiterLine(inputString))
+            return inputString.indexOf(delimiterEscapeEnd);
+
+       return 0;
+    }
+
+    private static String getDelimiterRegex(String inputString){
+
+        if (hasDelimiterLine(inputString)) {
+
+            String separator = inputString.substring(delimiterEscapeStart.length(),delimiterEndIndex(inputString));
+
+            if(separator.startsWith("[") && separator.endsWith("]"))
+                separator = separator.substring(1,separator.length() - 1);
+
+            return separator;
+        }
+
+        return defaultDelimiter;
+
+    }
+
     private static IntStream parseInputString(String inputString){
 
-            String separator = "[,\\n]";
-            if (inputString.startsWith("//")) {
+        String separator = getDelimiterRegex(inputString);
+        if (hasDelimiterLine(inputString)) {
 
-                int firstNewLine = inputString.indexOf('\n');
+            int firstNewLine = inputString.indexOf('\n');
+            inputString = inputString.substring(firstNewLine + 1);
+        }
 
-                separator = inputString.substring(2,firstNewLine);
-                if(separator.startsWith("[") && separator.endsWith("]"))
-                    separator = separator.substring(1,separator.length() - 1);
-
-                inputString = inputString.substring(firstNewLine + 1);
-            }
 
             Pattern splitPattern = Pattern.compile(separator);
 
