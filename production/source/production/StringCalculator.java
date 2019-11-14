@@ -27,27 +27,31 @@ public class StringCalculator  {
        return 0;
     }
 
+    private static String extractDelimiters(String delimitersString){
+
+        Matcher separatorMatcher = Pattern.compile("\\[([^\\]]+)\\]").matcher(delimitersString); //could be improved to remove dependency from format used to specify delimiters
+
+        StringBuilder separatorBuilder = new StringBuilder();
+        while (separatorMatcher.find())
+            separatorBuilder.append(separatorMatcher.group(1) + "|");
+
+        return separatorBuilder.toString().substring(0, separatorBuilder.length() - 1);
+
+    }
+
     private static String getDelimiterRegex(String inputString){
 
         if (hasDelimiterLine(inputString)) {
 
             String separator = inputString.substring(delimiterEscapeStart.length(),delimiterEndIndex(inputString));
 
-            if(separator.startsWith("[") && separator.endsWith("]")) {
-
-                Matcher separatorMatcher = Pattern.compile("\\[([^\\]]+)\\]").matcher(separator);
-                StringBuilder separatorBuilder = new StringBuilder();
-                while (separatorMatcher.find())
-                    separatorBuilder.append(separatorMatcher.group(1) + "|");
-
-                separator = separatorBuilder.toString().substring(0, separatorBuilder.length() - 1);
-            }
+            if(separator.startsWith("[") && separator.endsWith("]")) //could be improved to remove dependency from format used to specify delimiters
+                separator = extractDelimiters(separator);
 
             return separator;
         }
 
         return defaultDelimiter;
-
     }
 
     private static IntStream parseInputString(String inputString){
