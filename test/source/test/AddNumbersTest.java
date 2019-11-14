@@ -76,4 +76,10 @@ public class AddNumbersTest {
 
         assertThat(StringCalculator.add("//[:][°]\n1:2°3"), is(6));
     }
+
+    @Test
+    void multicharDelimiters() {
+
+        assertThat(StringCalculator.add("//[_:_][!°]\n1_:_2!°3"), is(6));
+    }
 }
