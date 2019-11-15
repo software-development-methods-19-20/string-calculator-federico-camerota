@@ -79,8 +79,9 @@ public class StringCalculator  {
         return exceptionText.toString().trim();
     }
 
-    private static IntPredicate loPassFilterPredicate(int threshold){
-        return x -> x <= threshold;
+    private static IntStream loPassFilter(IntStream numbers, int threshold){
+
+        return numbers.filter(x -> x <= threshold);
     }
 
     public static int add(String numbers) throws StringFormatException {
@@ -89,7 +90,7 @@ public class StringCalculator  {
             return 0;
         else {
 
-            IntStream numStream = parseInputString(numbers).filter(loPassFilterPredicate(1000));
+            IntStream numStream = loPassFilter(parseInputString(numbers), 1000);
 
             List<Integer> negatives = new LinkedList<Integer>();
 
