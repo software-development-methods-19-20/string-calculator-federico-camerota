@@ -24,7 +24,7 @@ public class StringCalculator  {
         if (hasDelimiterLine(inputString))
             return inputString.indexOf(delimiterEscapeEnd);
 
-       return 0;
+        return 0;
     }
 
     private static String extractDelimiters(String delimitersString){
@@ -59,12 +59,12 @@ public class StringCalculator  {
         String separator = getDelimiterRegex(inputString);
         if (hasDelimiterLine(inputString)) {
 
-            int firstNewLine = inputString.indexOf('\n');
-            inputString = inputString.substring(firstNewLine + 1);
+            int endDelimiterLine = delimiterEndIndex(inputString);
+            inputString = inputString.substring(endDelimiterLine + 1);
         }
 
 
-            Pattern splitPattern = Pattern.compile(separator);
+        Pattern splitPattern = Pattern.compile(separator);
 
         return splitPattern.splitAsStream(inputString.trim()).mapToInt(Integer::valueOf);
     }
@@ -100,6 +100,7 @@ public class StringCalculator  {
                 throw new StringFormatException(negativesExceptionMessage(negatives));
 
             return sum;
+
         }
 
     }
