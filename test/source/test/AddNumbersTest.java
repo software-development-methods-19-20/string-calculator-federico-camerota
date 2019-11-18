@@ -59,6 +59,20 @@ public class AddNumbersTest {
         assertEquals(thrown.getMessage().equals("Negatives not allowed: -3 -5"), true);
     }
 
+
+/* ---------------------------------------------------------------------------- TEST NOT WORKING AS EXPECTED
+    @Rule
+    public final ExpectedException thrown  = ExpectedException.none();
+    @Test
+    void negativesNotAllowed2(){
+
+        thrown.expect(StringFormatException.class);
+        thrown.expectMessage("Negatives not allowed: -3 -5");
+        StringCalculator.add("1,-3,2,-5,5");
+    }
+
+ */
+
     @Test
     void overOneThousand() {
 
