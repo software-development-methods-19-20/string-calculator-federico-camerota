@@ -20,18 +20,27 @@ public class StringCalculator  {
             return 0;
         else {
 
-            IntStream numStream = loPassFilter(parseInputString(numbers), 1000);
+            IntStream numStream = loPassFilter(checkNegatives(parseInputString(numbers)), 1000);
 
-            List<Integer> negatives = new LinkedList<Integer>();
-
-            int sum = numStream.map(x -> {if (x < 0) negatives.add(x); return x;}).sum();
-
-            if (negatives.size() > 0)
-                throw new StringFormatException(negatives);
-
-            return sum;
+            return numStream.sum();
 
         }
+
+    }
+
+    private static IntStream checkNegatives(IntStream numbers) throws StringFormatException{
+
+       int[] numArray = numbers.toArray();
+       List<Integer> negatives = new LinkedList<Integer>();
+
+       for (int x : numArray)
+           if (x < 0)
+               negatives.add(x);
+
+       if (negatives.size() > 0)
+           throw new StringFormatException(negatives);
+
+       return IntStream.of(numArray);
 
     }
 
