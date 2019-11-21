@@ -56,7 +56,7 @@ public class AddNumbersTest {
     void negativesNotAllowed() {
 
         Throwable thrown = assertThrows(StringFormatException.class, () -> {StringCalculator.add("1,-3,2,-5,5");});
-        assertEquals(thrown.getMessage().equals("Negatives not allowed: -3 -5"), true);
+        assertEquals(thrown.getMessage(),"Negatives not allowed: -3 -5");
     }
 
 

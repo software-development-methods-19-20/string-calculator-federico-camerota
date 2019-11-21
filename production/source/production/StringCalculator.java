@@ -14,44 +14,25 @@ public class StringCalculator  {
     public static final String delimiterEscapeStart = "//";
     public static final String delimiterEscapeEnd = "\n";
 
-    private static boolean hasDelimiterLine(String inputString) {
+    public static int add(String numbers) throws StringFormatException {
 
-        return inputString.startsWith(delimiterEscapeStart);
-    }
+        if (numbers.isEmpty())
+            return 0;
+        else {
 
-    private static int delimiterEndIndex(String inputString){
+            IntStream numStream = loPassFilter(parseInputString(numbers), 1000);
 
-        if (hasDelimiterLine(inputString))
-            return inputString.indexOf(delimiterEscapeEnd);
+            List<Integer> negatives = new LinkedList<Integer>();
 
-        return 0;
-    }
+            int sum = numStream.map(x -> {if (x < 0) negatives.add(x); return x;}).sum();
 
-    private static String extractDelimiters(String delimitersString){
+            if (negatives.size() > 0)
+                throw new StringFormatException(negatives);
 
-        Matcher separatorMatcher = Pattern.compile("\\[([^\\]]+)\\]").matcher(delimitersString); //could be improved to remove dependency from format used to specify delimiters
+            return sum;
 
-        StringBuilder separatorBuilder = new StringBuilder();
-        while (separatorMatcher.find())
-            separatorBuilder.append(separatorMatcher.group(1) + "|");
-
-        return separatorBuilder.toString().substring(0, separatorBuilder.length() - 1);
-
-    }
-
-    private static String getDelimiterRegex(String inputString){
-
-        if (hasDelimiterLine(inputString)) {
-
-            String separator = inputString.substring(delimiterEscapeStart.length(),delimiterEndIndex(inputString));
-
-            if(separator.startsWith("[") && separator.endsWith("]")) //could be improved to remove dependency from format used to specify delimiters
-                separator = extractDelimiters(separator);
-
-            return separator;
         }
 
-        return defaultDelimiter;
     }
 
     private static IntStream parseInputString(String inputString){
@@ -69,14 +50,44 @@ public class StringCalculator  {
         return splitPattern.splitAsStream(inputString.trim()).mapToInt(Integer::valueOf);
     }
 
-    private static String negativesExceptionMessage(List<Integer> negatives){
+    private static String getDelimiterRegex(String inputString){
 
-        StringBuilder exceptionText = new StringBuilder("Negatives not allowed: ");
-        for ( Integer negativeNumber : negatives) {
-            exceptionText.append(negativeNumber).append(" ");
+        if (hasDelimiterLine(inputString)) {
+
+            String separator = inputString.substring(delimiterEscapeStart.length(),delimiterEndIndex(inputString));
+
+            if(separator.startsWith("[") && separator.endsWith("]")) //could be improved to remove dependency from format used to specify delimiters
+                separator = extractDelimiters(separator);
+
+            return separator;
         }
 
-        return exceptionText.toString().trim();
+        return defaultDelimiter;
+    }
+
+    private static int delimiterEndIndex(String inputString){
+
+        if (hasDelimiterLine(inputString))
+            return inputString.indexOf(delimiterEscapeEnd);
+
+        return 0;
+    }
+
+    private static boolean hasDelimiterLine(String inputString) {
+
+        return inputString.startsWith(delimiterEscapeStart);
+    }
+
+    private static String extractDelimiters(String delimitersString){
+
+        Matcher separatorMatcher = Pattern.compile("\\[([^\\]]+)\\]").matcher(delimitersString); //could be improved to remove dependency from format used to specify delimiters
+
+        StringBuilder separatorBuilder = new StringBuilder();
+        while (separatorMatcher.find())
+            separatorBuilder.append(separatorMatcher.group(1) + "|");
+
+        return separatorBuilder.toString().substring(0, separatorBuilder.length() - 1);
+
     }
 
     private static IntStream loPassFilter(IntStream numbers, int threshold){
@@ -84,24 +95,5 @@ public class StringCalculator  {
         return numbers.filter(x -> x <= threshold);
     }
 
-    public static int add(String numbers) throws StringFormatException {
 
-        if (numbers.isEmpty())
-            return 0;
-        else {
-
-            IntStream numStream = loPassFilter(parseInputString(numbers), 1000);
-
-            List<Integer> negatives = new LinkedList<Integer>();
-
-            int sum = numStream.map(x -> {if (x < 0) negatives.add(x); return x;}).sum();
-
-            if (negatives.size() > 0)
-                throw new StringFormatException(negativesExceptionMessage(negatives));
-
-            return sum;
-
-        }
-
-    }
 }
