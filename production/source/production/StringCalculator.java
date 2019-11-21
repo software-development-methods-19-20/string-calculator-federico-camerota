@@ -1,10 +1,12 @@
 package production;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.IntPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class StringCalculator  {
@@ -31,11 +33,8 @@ public class StringCalculator  {
     private static IntStream checkNegatives(IntStream numbers) throws StringFormatException{
 
        int[] numArray = numbers.toArray();
-       List<Integer> negatives = new LinkedList<Integer>();
 
-       for (int x : numArray)
-           if (x < 0)
-               negatives.add(x);
+       List<Integer> negatives = IntStream.of(numArray).filter(x -> x < 0).boxed().collect(Collectors.toList());
 
        if (negatives.size() > 0)
            throw new StringFormatException(negatives);
