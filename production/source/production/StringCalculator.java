@@ -11,10 +11,10 @@ import java.util.stream.IntStream;
 
 public class StringCalculator  {
 
-    public static final String defaultDelimiter = "[,\\n]";
+    public static final String DEFAULT_DELIMITER_REGEX = "[,\\n]";
 
-    public static final String delimiterEscapeStart = "//";
-    public static final String delimiterEscapeEnd = "\n";
+    public static final String DELIMITER_ESCAPE_START = "//";
+    public static final String DELIMITER_ESCAPE_END = "\n";
 
     public static int add(String numbers) throws StringFormatException {
 
@@ -22,7 +22,7 @@ public class StringCalculator  {
             return 0;
         else {
 
-            IntStream numStream = loPassFilter(checkNegatives(parseInputString(numbers)), 1000);
+            IntStream numStream = loPassFilter(checkNegatives(parse(numbers)), 1000);
 
             return numStream.sum();
 
@@ -43,7 +43,7 @@ public class StringCalculator  {
 
     }
 
-    private static IntStream parseInputString(String inputString){
+    private static IntStream parse(String inputString){
 
         String separator = getDelimiterRegex(inputString);
         if (hasDelimiterLine(inputString)) {
@@ -62,31 +62,31 @@ public class StringCalculator  {
 
         if (hasDelimiterLine(inputString)) {
 
-            String separator = inputString.substring(delimiterEscapeStart.length(),delimiterEndIndex(inputString));
+            String separator = inputString.substring(DELIMITER_ESCAPE_START.length(),delimiterEndIndex(inputString));
 
             if(separator.startsWith("[") && separator.endsWith("]")) //could be improved to remove dependency from format used to specify delimiters
-                separator = extractDelimiters(separator);
+                separator = buildCustomDelimiterRegEx(separator);
 
             return separator;
         }
 
-        return defaultDelimiter;
+        return DEFAULT_DELIMITER_REGEX;
     }
 
     private static int delimiterEndIndex(String inputString){
 
         if (hasDelimiterLine(inputString))
-            return inputString.indexOf(delimiterEscapeEnd);
+            return inputString.indexOf(DELIMITER_ESCAPE_END);
 
         return 0;
     }
 
     private static boolean hasDelimiterLine(String inputString) {
 
-        return inputString.startsWith(delimiterEscapeStart);
+        return inputString.startsWith(DELIMITER_ESCAPE_START);
     }
 
-    private static String extractDelimiters(String delimitersString){
+    private static String buildCustomDelimiterRegEx(String delimitersString){
 
         Matcher separatorMatcher = Pattern.compile("\\[([^\\]]+)\\]").matcher(delimitersString); //could be improved to remove dependency from format used to specify delimiters
 
