@@ -62,9 +62,10 @@ public class AddNumbersTest {
 
 /* ---------------------------------------------------------------------------- TEST NOT WORKING AS EXPECTED
     @Rule
-    public final ExpectedException thrown  = ExpectedException.none();
+    public ExpectedException thrown  = ExpectedException.none();
+
     @Test
-    void negativesNotAllowed2(){
+    void negativesNotAllowed2() throws StringFormatException{
 
         thrown.expect(StringFormatException.class);
         thrown.expectMessage("Negatives not allowed: -3 -5");
